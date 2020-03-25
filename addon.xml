@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="plugin.video.baivarutv"  version="1.0.0"  name="Baivaru TV"  provider-name="Baivaru">
+  <requires>
+    <import addon="xbmc.python" version="2.25.0"/>
+    <import addon="script.module.requests" version="2.22.0"/>
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="main.py">
+    <provides>video</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en">Baivaru TV</summary>
+    <description lang="en_GB">The collection of movies from famous telegram channel @baivaru.</description>
+    <assets>
+      <icon>icon.png</icon>
+      <fanart>fanart.png</fanart>
+      <screenshot>resources\screenshots\screenshot-01.JPG</screenshot>
+      <screenshot>resources\screenshots\screenshot-02.JPG</screenshot>
+      <screenshot>resources\screenshots\screenshot-03.JPG</screenshot>
+    </assets>
+  </extension>
+</addon>
