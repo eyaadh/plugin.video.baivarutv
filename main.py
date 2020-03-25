@@ -13,9 +13,7 @@ __handle__ = int(sys.argv[1])
 
 def get_videos():
     """
-    Get the list of videofiles/streams.
-    Here you can insert some parsing code that retrieves
-    the list of videostreams in a given category from some site or server.
+    Get the list of videofiles/streams
     :return: list
     """
 
@@ -87,10 +85,33 @@ def list_videos():
 def router(paramstring):
     """
     Router function that calls other functions
-    depending on the provided paramstring
+    depending on the provided paramstring, also creates the playercorefactory file
     :param paramstring:
     :return:
     """
+
+    player_core_path = xbmc.translatePath('special://userdata/playercorefactory.xml')
+    external_player = xbmcplugin.getSetting(__handle__, "external_player") == "true"
+
+    if external_player is True:
+        if not os.path.exists(player_core_path):
+            if xbmc.getCondVisibility('system.platform.linux') and xbmc.getCondVisibility('system.platform.android'):
+                pf.create_adroid_vlc(player_core_path)
+            if xbmc.getCondVisibility('system.platform.linux') and not xbmc.getCondVisibility(
+                    'system.platform.android'):
+                pf.create_linux(player_core_path)
+            elif xbmc.getCondVisibility('system.platform.windows'):
+                if os.path.exists("C:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe"):
+                    pf.create_win32(player_core_path)
+                elif os.path.exists("C:\\Program Files\\VideoLAN\\VLC\\vlc.exe"):
+                    pf.create_win64(player_core_path)
+    else:
+        if os.path.exists(player_core_path):
+            try:
+                os.remove(player_core_path)
+            except:
+                pass
+
     params = dict(parse_qsl(paramstring[1:]))
     if params:
         if params['action'] == 'play':
@@ -100,25 +121,5 @@ def router(paramstring):
 
 
 if __name__ == '__main__':
-    player_core_path = os.path.join(xbmc.translatePath('special://home'), 'userdata', 'playercorefactory.xml')
-    external_player = xbmcplugin.getSetting(__handle__, "external_player") == "true"
-
-    if external_player:
-        if not os.path.exists(player_core_path):
-            if xbmc.getCondVisibility('system.platform.linux') and xbmc.getCondVisibility('system.platform.android'):
-                pf.create_adroid_vlc(player_core_path)
-            if xbmc.getCondVisibility('system.platform.linux') and not xbmc.getCondVisibility('system.platform.android'):
-                pf.create_linux(player_core_path)
-            elif xbmc.getCondVisibility('system.platform.windows'):
-                if os.path.exists("C:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe"):
-                    pf.create_win32(player_core_path)
-                elif os.path.exists("C:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe"):
-                    pf.create_win64(player_core_path)
-    else:
-        if os.path.exists(player_core_path):
-            try:
-                os.remove(player_core_path)
-            except:
-                pass
 
     router(sys.argv[2])
