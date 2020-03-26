@@ -18,8 +18,9 @@ def get_videos():
     """
 
     dc = xbmcplugin.getSetting(__handle__, "dc")
+    headers = {'content-type': 'application/json'}
 
-    with requests.get(dc) as response:
+    with requests.get(dc, headers=headers) as response:
         data = response.json()
 
         collection = []
