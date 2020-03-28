@@ -1,4 +1,5 @@
 <settings>
    <setting id="dc" type="text" label="30000" default="http://dc1.baivaru.net:5050"/>
    <setting id="external_player" type="bool" label="30001" default="true"/>
+   <setting id="token" type="text" label="30002" default="1234"/>
 </settings>

@@ -18,12 +18,23 @@ def get_videos():
     """
 
     dc = xbmcplugin.getSetting(__handle__, "dc")
-    headers = {'content-type': 'application/json'}
+    kodi_token = xbmcplugin.getSetting(__handle__, "token")
+    headers = {'content-type': 'application/json', 'kodi_token': kodi_token}
 
     with requests.get(dc, headers=headers) as response:
+        if response.status_code != 200:
+            return False
         data = response.json()
 
         collection = []
+
+        user = None
+        if 'user_name' in data['user_details']:
+            user = data['user_details']['user_name']
+        elif 'f_name' in data['user_details'] and not 'user_name' in data['user_details']:
+            user = data['user_details']['f_name']
+
+        xbmc.executebuiltin("Notification(BaivaruTV,Welcome back %s)" % user)
 
         for item in data['playlist']:
             _data = {
@@ -61,26 +72,29 @@ def list_videos():
     """
     videos = get_videos()
 
-    listing = []
-    for video in videos:
-        list_item = xbmcgui.ListItem(label=video['name'], thumbnailImage=video['thumb'])
-        list_item.setProperty('fanart_image', video['thumb'])
-        list_item.setInfo('video', {'title': video['name'], 'genre': video['genre'], 'cast': list(video['cast']),
-                                    'director': video['director'], 'tagline': video['tagline']})
-        list_item.setProperty('IsPlayable', 'true')
+    if not videos:
+        xbmc.executebuiltin("Notification(BaivaruTV,Unauthorized. Please use a valid token)")
+    else:
+        listing = []
+        for video in videos:
+            list_item = xbmcgui.ListItem(label=video['name'], thumbnailImage=video['thumb'])
+            list_item.setProperty('fanart_image', video['thumb'])
+            list_item.setInfo('video', {'title': video['name'], 'genre': video['genre'], 'cast': list(video['cast']),
+                                        'director': video['director'], 'tagline': video['tagline']})
+            list_item.setProperty('IsPlayable', 'true')
 
-        # Example: plugin://plugin.video.example/?action=play&video=http://www.vidsplay.com/vids/crab.mp4
-        # url = '{0}?action=play&video={1}'.format(__url__, video['video'])
-        url = video['video']
-        is_folder = False
+            # Example: plugin://plugin.video.example/?action=play&video=http://www.vidsplay.com/vids/crab.mp4
+            # url = '{0}?action=play&video={1}'.format(__url__, video['video'])
+            url = video['video']
+            is_folder = False
 
-        listing.append((url, list_item, is_folder))
+            listing.append((url, list_item, is_folder))
 
-    xbmcplugin.addDirectoryItems(__handle__, listing, len(listing))
-    xbmcplugin.setContent(__handle__, 'Movies')
+        xbmcplugin.addDirectoryItems(__handle__, listing, len(listing))
+        xbmcplugin.setContent(__handle__, 'Movies')
 
-    xbmcplugin.addSortMethod(__handle__, xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE)
-    xbmcplugin.endOfDirectory(__handle__)
+        xbmcplugin.addSortMethod(__handle__, xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE)
+        xbmcplugin.endOfDirectory(__handle__)
 
 
 def router(paramstring):
