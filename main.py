@@ -29,9 +29,9 @@ def get_videos():
         collection = []
 
         user = None
-        if 'user_name' in data['user_details']:
+        if 'user_name' in data['user_details'] and data['user_details']['user_name'] is not None:
             user = data['user_details']['user_name']
-        elif 'f_name' in data['user_details'] and not 'user_name' in data['user_details']:
+        elif 'f_name' in data['user_details']:
             user = data['user_details']['f_name']
 
         xbmc.executebuiltin("Notification(BaivaruTV,Welcome back %s)" % user)
