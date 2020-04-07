@@ -41,3 +41,13 @@ def create_linux(player_core_path):
             '<warpcursor>none</warpcursor>\n</player>\n</players>\n<rules action="prepend">\n'
             '<rule internetstream="true" player="vlc" />\n</rules>\n</playercorefactory>')
     xbmc.executebuiltin("Notification(BaivaruTV,Restart Kodi for the external Player to work)")
+
+
+def create_osx(player_core_path):
+    f = open(player_core_path, mode='w')
+    f.write('<playercorefactory>\n<players>\n<player name="vlc" type="ExternalPlayer" audio="false" '
+            'video="true">\n<filename>/Applications/VLC.app/Contents/MacOS/VLC</filename>'
+            '\n<args>--fullscreen "{1}" </args>\n<hidexbmc>true</hidexbmc>\n<hideconsole>flase</hideconsole>\n'
+            '<warpcursor>none</warpcursor>\n</player>\n</players>\n<rules action="prepend">\n'
+            '<rule internetstream="true" player="vlc" />\n</rules>\n</playercorefactory>')
+    xbmc.executebuiltin("Notification(BaivaruTV,Restart Kodi for the external Player to work)")

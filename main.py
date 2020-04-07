@@ -120,6 +120,8 @@ def router(paramstring):
                     pf.create_win32(player_core_path)
                 elif os.path.exists("C:\\Program Files\\VideoLAN\\VLC\\vlc.exe"):
                     pf.create_win64(player_core_path)
+            elif xbmc.getCondVisibility("system.platform.osx"):
+                pf.create_osx(player_core_path)
     else:
         if os.path.exists(player_core_path):
             try:
