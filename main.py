@@ -44,7 +44,9 @@ def get_videos():
                 'genre': str(item['genre']),
                 "cast": item['cast'],
                 "director": item['director'],
-                "tagline": item['tagline']
+                "tagline": item['tagline'],
+                "year": item['year'],
+                "rating": item['imdbrating']
             }
             collection.append(_data)
 
@@ -80,7 +82,8 @@ def list_videos():
             list_item = xbmcgui.ListItem(label=video['name'], thumbnailImage=video['thumb'])
             list_item.setProperty('fanart_image', video['thumb'])
             list_item.setInfo('video', {'title': video['name'], 'genre': video['genre'], 'cast': list(video['cast']),
-                                        'director': video['director'], 'tagline': video['tagline']})
+                                        'director': video['director'], 'tagline': video['tagline'],
+                                        'year': video['year'], 'rating': video['rating']})
             list_item.setProperty('IsPlayable', 'true')
 
             # Example: plugin://plugin.video.example/?action=play&video=http://www.vidsplay.com/vids/crab.mp4
@@ -93,7 +96,10 @@ def list_videos():
         xbmcplugin.addDirectoryItems(__handle__, listing, len(listing))
         xbmcplugin.setContent(__handle__, 'Movies')
 
-        xbmcplugin.addSortMethod(__handle__, xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE)
+        xbmcplugin.addSortMethod(__handle__, xbmcplugin.SORT_METHOD_VIDEO_TITLE)
+        xbmcplugin.addSortMethod(__handle__, xbmcplugin.SORT_METHOD_VIDEO_RATING)
+        xbmcplugin.addSortMethod(__handle__, xbmcplugin.SORT_METHOD_VIDEO_YEAR)
+
         xbmcplugin.endOfDirectory(__handle__)
 
 
@@ -106,23 +112,91 @@ def router(paramstring):
     """
 
     player_core_path = xbmc.translatePath('special://userdata/playercorefactory.xml')
-    external_player = xbmcplugin.getSetting(__handle__, "external_player") == "true"
+    external_player = xbmcplugin.getSetting(__handle__, "external_player")
+    xbmc.executebuiltin("Notification(BaivaruTV,%s)" % external_player)
 
-    if external_player is True:
+    if external_player == "1":
+        if xbmc.getCondVisibility('system.platform.linux') and xbmc.getCondVisibility('system.platform.android'):
+            if not os.path.exists(player_core_path):
+                pf.create_adroid_vlc(player_core_path)
+            else:
+                file = open(player_core_path)
+                read_lines = file.readlines()
+                if read_lines[3] != "<filename>org.videolan.vlc</filename>":
+                    pf.create_adroid_vlc(player_core_path)
+        if xbmc.getCondVisibility('system.platform.linux') and not xbmc.getCondVisibility(
+                'system.platform.android'):
+            if not os.path.exists(player_core_path):
+                pf.create_linux(player_core_path)
+            else:
+                file = open(player_core_path)
+                read_lines = file.readlines()
+                if read_lines[3] != "<filename>/usr/bin/vlc</filename>":
+                    pf.create_linux(player_core_path)
+        elif xbmc.getCondVisibility('system.platform.windows'):
+            if os.path.exists("C:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe"):
+                if not os.path.exists(player_core_path):
+                    pf.create_win32(player_core_path)
+                else:
+                    file = open(player_core_path)
+                    read_lines = file.readlines()
+                    if read_lines[3] != "<filename>C:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe</filename>":
+                        pf.create_win32(player_core_path)
+            elif os.path.exists("C:\\Program Files\\VideoLAN\\VLC\\vlc.exe"):
+                if not os.path.exists(player_core_path):
+                    pf.create_win64(player_core_path)
+                else:
+                    file = open(player_core_path)
+                    read_lines = file.readlines()
+                    if read_lines[3] != "<filename>C:\\Program Files\\VideoLAN\\VLC\\vlc.exe</filename>":
+                        pf.create_win64(player_core_path)
+        elif xbmc.getCondVisibility("system.platform.osx"):
+            if not os.path.exists(player_core_path):
+                pf.create_osx(player_core_path)
+            else:
+                file = open(player_core_path)
+                read_lines = file.readlines()
+                if read_lines[3] != "<filename>/Applications/VLC.app/Contents/MacOS/VLC</filename>":
+                    pf.create_osx(player_core_path)
+    elif external_player == "2":
         if not os.path.exists(player_core_path):
             if xbmc.getCondVisibility('system.platform.linux') and xbmc.getCondVisibility('system.platform.android'):
-                pf.create_adroid_vlc(player_core_path)
-            if xbmc.getCondVisibility('system.platform.linux') and not xbmc.getCondVisibility(
-                    'system.platform.android'):
-                pf.create_linux(player_core_path)
-            elif xbmc.getCondVisibility('system.platform.windows'):
-                if os.path.exists("C:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe"):
-                    pf.create_win32(player_core_path)
-                elif os.path.exists("C:\\Program Files\\VideoLAN\\VLC\\vlc.exe"):
-                    pf.create_win64(player_core_path)
-            elif xbmc.getCondVisibility("system.platform.osx"):
-                pf.create_osx(player_core_path)
-    else:
+                pf.create_android_mxplayer_free(player_core_path)
+        else:
+            file = open(player_core_path)
+            read_lines = file.readlines()
+            if xbmc.getCondVisibility('system.platform.linux') and xbmc.getCondVisibility('system.platform.android'):
+                if read_lines[3] != "<filename>com.mxtech.videoplayer.ad</filename>":
+                    pf.create_android_mxplayer_free(player_core_path)
+    elif external_player == "3":
+        if not os.path.exists(player_core_path):
+            if xbmc.getCondVisibility('system.platform.linux') and xbmc.getCondVisibility('system.platform.android'):
+                pf.create_android_mxplayer_pro(player_core_path)
+        else:
+            file = open(player_core_path)
+            read_lines = file.readlines()
+            if xbmc.getCondVisibility('system.platform.linux') and xbmc.getCondVisibility('system.platform.android'):
+                if read_lines[3] != "<filename>com.mxtech.videoplayer.pro</filename>":
+                    pf.create_android_mxplayer_pro(player_core_path)
+    elif external_player == "4":
+        if not os.path.exists(player_core_path):
+            if xbmc.getCondVisibility('system.platform.windows'):
+                if os.path.exists("C:\\Program Files (x86)\\DAUM\\PotPlayer\\PotPlayerMini.exe"):
+                    pf.create_win32_pot_player(player_core_path)
+                elif os.path.exists("C:\\Program Files\\DAUM\\PotPlayer\\PotPlayerMini64.exe"):
+                    pf.create_win64_pot_player(player_core_path)
+        else:
+            file = open(player_core_path)
+            read_lines = file.readlines()
+            if xbmc.getCondVisibility('system.platform.windows'):
+                if os.path.exists("C:\\Program Files (x86)\\DAUM\\PotPlayer\\PotPlayerMini.exe"):
+                    if read_lines[3] != "<filename>C:\\Program Files (x86)\\DAUM\\PotPlayer\\PotPlayerMini.exe</filename>":
+                        pf.create_win32_pot_player(player_core_path)
+                elif os.path.exists("C:\\Program Files\\DAUM\\PotPlayer\\PotPlayerMini64.exe"):
+                    if read_lines[3] != "<filename>C:\\Program Files\\DAUM\\PotPlayer\\PotPlayerMini64.exe</filename>":
+                        pf.create_win64_pot_player(player_core_path)
+
+    elif external_player == "0":
         if os.path.exists(player_core_path):
             try:
                 os.remove(player_core_path)
@@ -138,5 +212,4 @@ def router(paramstring):
 
 
 if __name__ == '__main__':
-
     router(sys.argv[2])

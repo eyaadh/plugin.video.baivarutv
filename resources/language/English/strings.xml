@@ -2,4 +2,9 @@
     <string id="30000">DC</string>
     <string id="30001">External Player</string>
     <string id="30002">Token</string>
+    <string id="40000">Disabled</string>
+    <string id="40001">VLC(All Platforms)</string>
+    <string id="40002">MxPlayerFree(Android Only)</string>
+    <string id="40003">MxPlayerPro(Android Only)</string>
+    <string id="40004">PotPlayer(Windows Only)</string>
 </strings>
