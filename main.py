@@ -113,26 +113,17 @@ def router(paramstring):
 
     player_core_path = xbmc.translatePath('special://userdata/playercorefactory.xml')
     external_player = xbmcplugin.getSetting(__handle__, "external_player")
-    # xbmc.executebuiltin("Notification(BaivaruTV,%s)" % external_player)
 
     if external_player == "1":
         if xbmc.getCondVisibility('system.platform.linux') and xbmc.getCondVisibility('system.platform.android'):
             if not os.path.exists(player_core_path):
                 pf.create_adroid_vlc(player_core_path)
-            else:
-                file = open(player_core_path)
-                read_lines = file.readlines()
-                if read_lines[3] != "<filename>org.videolan.vlc</filename>":
-                    pf.create_adroid_vlc(player_core_path)
+
         if xbmc.getCondVisibility('system.platform.linux') and not xbmc.getCondVisibility(
                 'system.platform.android'):
             if not os.path.exists(player_core_path):
                 pf.create_linux(player_core_path)
-            else:
-                file = open(player_core_path)
-                read_lines = file.readlines()
-                if read_lines[3] != "<filename>/usr/bin/vlc</filename>":
-                    pf.create_linux(player_core_path)
+
         elif xbmc.getCondVisibility('system.platform.windows'):
             if os.path.exists("C:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe"):
                 if not os.path.exists(player_core_path):
@@ -153,31 +144,17 @@ def router(paramstring):
         elif xbmc.getCondVisibility("system.platform.osx"):
             if not os.path.exists(player_core_path):
                 pf.create_osx(player_core_path)
-            else:
-                file = open(player_core_path)
-                read_lines = file.readlines()
-                if read_lines[3] != "<filename>/Applications/VLC.app/Contents/MacOS/VLC</filename>":
-                    pf.create_osx(player_core_path)
+
     elif external_player == "2":
         if not os.path.exists(player_core_path):
             if xbmc.getCondVisibility('system.platform.linux') and xbmc.getCondVisibility('system.platform.android'):
                 pf.create_android_mxplayer_free(player_core_path)
-        else:
-            file = open(player_core_path)
-            read_lines = file.readlines()
-            if xbmc.getCondVisibility('system.platform.linux') and xbmc.getCondVisibility('system.platform.android'):
-                if read_lines[3] != "<filename>com.mxtech.videoplayer.ad</filename>":
-                    pf.create_android_mxplayer_free(player_core_path)
+
     elif external_player == "3":
         if not os.path.exists(player_core_path):
             if xbmc.getCondVisibility('system.platform.linux') and xbmc.getCondVisibility('system.platform.android'):
                 pf.create_android_mxplayer_pro(player_core_path)
-        else:
-            file = open(player_core_path)
-            read_lines = file.readlines()
-            if xbmc.getCondVisibility('system.platform.linux') and xbmc.getCondVisibility('system.platform.android'):
-                if read_lines[3] != "<filename>com.mxtech.videoplayer.pro</filename>":
-                    pf.create_android_mxplayer_pro(player_core_path)
+
     elif external_player == "4":
         if not os.path.exists(player_core_path):
             if xbmc.getCondVisibility('system.platform.windows'):
