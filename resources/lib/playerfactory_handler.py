@@ -8,7 +8,7 @@ def create_adroid_vlc(player_core_path):
             '\n<args>--fullscreen "{1}" </args>\n<hidexbmc>true</hidexbmc>\n<hideconsole>flase</hideconsole>\n'
             '<warpcursor>none</warpcursor>\n</player>\n</players>\n<rules action="prepend">\n'
             '<rule internetstream="true" player="vlc" />\n</rules>\n</playercorefactory>')
-    xbmc.executebuiltin("Notification(BaivaruTV,Restart Kodi for the external Player to work)")
+    # xbmc.executebuiltin("Notification(BaivaruTV,Restart Kodi for the external Player to work)")
     # xbmc.executebuiltin('RestartApp')
 
 
@@ -19,7 +19,7 @@ def create_android_mxplayer_free(player_core_path):
             '\n<hidexbmc>true</hidexbmc>\n<hideconsole>flase</hideconsole>\n'
             '<warpcursor>none</warpcursor>\n</player>\n</players>\n<rules action="prepend">\n'
             '<rule internetstream="true" player="mx_free" />\n</rules>\n</playercorefactory>')
-    xbmc.executebuiltin("Notification(BaivaruTV,Restart Kodi for the external Player to work)")
+    # xbmc.executebuiltin("Notification(BaivaruTV,Restart Kodi for the external Player to work)")
     # xbmc.executebuiltin('RestartApp')
 
 
@@ -30,7 +30,7 @@ def create_android_mxplayer_pro(player_core_path):
             '\n<hidexbmc>true</hidexbmc>\n<hideconsole>flase</hideconsole>\n'
             '<warpcursor>none</warpcursor>\n</player>\n</players>\n<rules action="prepend">\n'
             '<rule internetstream="true" player="mx_free" />\n</rules>\n</playercorefactory>')
-    xbmc.executebuiltin("Notification(BaivaruTV,Restart Kodi for the external Player to work)")
+    # xbmc.executebuiltin("Notification(BaivaruTV,Restart Kodi for the external Player to work)")
     # xbmc.executebuiltin('RestartApp')
 
 
