@@ -113,7 +113,7 @@ def router(paramstring):
 
     player_core_path = xbmc.translatePath('special://userdata/playercorefactory.xml')
     external_player = xbmcplugin.getSetting(__handle__, "external_player")
-    xbmc.executebuiltin("Notification(BaivaruTV,%s)" % external_player)
+    # xbmc.executebuiltin("Notification(BaivaruTV,%s)" % external_player)
 
     if external_player == "1":
         if xbmc.getCondVisibility('system.platform.linux') and xbmc.getCondVisibility('system.platform.android'):
